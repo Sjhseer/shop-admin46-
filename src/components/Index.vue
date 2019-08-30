@@ -120,11 +120,4 @@ export default {
 .el-menu {
   border: 0px solid #000;
 }
-
-.el-main {
-  background-color: #e9eef3;
-  color: #333;
-  text-align: center;
-  line-height: 160px;
-}
 </style>
