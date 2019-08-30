@@ -265,12 +265,12 @@ export default {
     },
     // 修改状态
     async changeUser (row) {
+      console.log(row)
       const { meta } = await this.$axios.put(
         `users/${row.id}/state/${row.mg_state}`
       )
-      console.log(meta)
       if (meta.status === 200) {
-        this.$message.success('修改成功')
+        this.$message.success(meta.msg)
       } else {
         this.$message.error(meta.msg)
       }
