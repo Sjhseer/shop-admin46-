@@ -7,6 +7,7 @@
     </el-breadcrumb>
 
     <el-table :data="rightlist" style="width: 100%">
+      <el-table-column type="index"></el-table-column>
       <el-table-column prop="authName" label="权限名称"></el-table-column>
       <el-table-column prop="path" label="路径"></el-table-column>
       <el-table-column label="层级">

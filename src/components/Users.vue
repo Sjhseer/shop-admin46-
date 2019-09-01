@@ -72,9 +72,27 @@
       </el-table-column>
       <el-table-column label="操作">
         <template v-slot:default="obj">
-          <el-button @click="edituser(obj.row)" size="small" type="primary" icon="el-icon-edit"></el-button>
-          <el-button @click="deluser(obj.row.id)" size="small" type="danger" icon="el-icon-delete"></el-button>
-          <el-button size="small" type="success" icon="el-icon-check">分配角色</el-button>
+          <el-button
+            @click="edituser(obj.row)"
+            size="small"
+            plain
+            type="primary"
+            icon="el-icon-edit"
+          ></el-button>
+          <el-button
+            @click="deluser(obj.row.id)"
+            size="small"
+            plain
+            type="danger"
+            icon="el-icon-delete"
+          ></el-button>
+          <el-button
+            @click="addfp(obj.row)"
+            size="small"
+            type="success"
+            plain
+            icon="el-icon-check"
+          >分配角色</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -90,6 +108,28 @@
         :total="total"
       ></el-pagination>
     </div>
+    <!-- 分配角色对话框->表单 -->
+    <el-dialog title="分配角色" :visible.sync="fpVisible" width="40%">
+      <el-form ref="fpform" :model="fpform" label-width="80px">
+        <el-form-item label="用户名">
+          <el-tag type="info">{{fpform.username}}</el-tag>
+        </el-form-item>
+        <el-form-item label="角色列表">
+          <el-select v-model="fpform.id" placeholder="请选择">
+            <el-option
+              v-for="item in options "
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="fpVisible=false">取消</el-button>
+        <el-button @click="assignRole" type="primary">分配</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -151,6 +191,7 @@ export default {
           }
         ]
       },
+      fpVisible: false,
       // 修改数据提交
       editVisible: false,
       editform: {
@@ -158,7 +199,13 @@ export default {
         username: '',
         email: '',
         mobile: ''
-      }
+      },
+      fpform: {
+        id: '',
+        rid: '',
+        username: ''
+      },
+      options: []
     }
   },
   created () {
@@ -215,7 +262,7 @@ export default {
           this.$message.error(meta.msg)
         }
       } catch (e) {
-        console.log('sssssssss')
+        console.log(e)
       }
     },
     // 添加用户功能
@@ -237,7 +284,7 @@ export default {
           this.$message(meta.msg)
         }
       } catch (e) {
-        console.log('xxxxxxxxxxx')
+        console.log('？？？？？？')
       }
     },
     // 清空表单
@@ -300,6 +347,38 @@ export default {
         }
       } catch (e) {
         console.log(e)
+      }
+    },
+    // 分配角色
+    async addfp (row) {
+      console.log(row)
+      this.fpVisible = true
+      this.fpform.username = row.username
+      this.fpform.id = row.id
+      const resUser = await this.$axios.put(`users/${row.id}`)
+      if (resUser.meta.status === 200) {
+        const rid = resUser.data.id
+        this.fpform.rid = rid === -1 ? '' : rid
+      }
+      const { meta, data } = await this.$axios.get('roles')
+      if (meta.status === 200) {
+        this.options = data
+      } else {
+        this.$message.error(meta.msg)
+      }
+    },
+    async assignRole () {
+      const { id, rid } = this.fpform
+      if (rid === '') {
+        this.$message.error('请用户选择角色')
+      }
+      const { meta } = await this.$axios.put(`users/${id}/role`, { rid })
+      if (meta.status === 200) {
+        this.$message.success(meta.msg)
+        this.fpVisible = true
+        this.getuserlist()
+      } else {
+        this.$message.error(meta.msg)
       }
     }
   }
