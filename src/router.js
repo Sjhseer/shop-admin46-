@@ -5,6 +5,8 @@ import Index from './components/Index.vue'
 import Users from './components/users/Users.vue'
 import Rights from './components/rights/Rights.vue'
 import Roles from './components/rights/Roles.vue'
+import Goods from './components/products/Goods.vue'
+import Categories from './components/products/Categories.vue'
 
 const originalPush = Router.prototype.push
 Router.prototype.push = function push (location) {
@@ -40,12 +42,20 @@ const router = new Router({
         path: '/roles',
         name: 'roles',
         component: Roles
+      },
+      {
+        path: '/goods',
+        name: 'goods',
+        component: Goods
+      }, {
+        path: '/categories',
+        name: 'categories',
+        component: Categories
       }]
     }
   ]
 })
 router.beforeEach((to, form, next) => {
-  console.log(to)
   const token = localStorage.getItem('token')
   if (to.path === '/login' || token) {
     next()
