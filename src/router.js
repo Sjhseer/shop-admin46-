@@ -7,6 +7,16 @@ import Rights from './components/rights/Rights.vue'
 import Roles from './components/rights/Roles.vue'
 import Goods from './components/products/Goods.vue'
 import Categories from './components/products/Categories.vue'
+import GoodsAdd from './components/products/GoodsAdd.vue'
+// 富文本编辑器
+import VueQuillEditor from 'vue-quill-editor'
+
+// require styles
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+
+Vue.use(VueQuillEditor)
 
 const originalPush = Router.prototype.push
 Router.prototype.push = function push (location) {
@@ -47,10 +57,16 @@ const router = new Router({
         path: '/goods',
         name: 'goods',
         component: Goods
-      }, {
+      },
+      {
         path: '/categories',
         name: 'categories',
         component: Categories
+      },
+      {
+        path: '/goods-add',
+        name: 'goods-add',
+        component: GoodsAdd
       }]
     }
   ]

@@ -78,12 +78,12 @@ export default {
     },
     async delgood (id) {
       console.log(id)
-      const { meta } = await this.$axios.delete(`categories/${id}`)
+      const { meta } = await this.$axios.delete(`goods/${id}`)
       if (meta.status === 200) {
         this.$message.success(meta.msg)
         this.getgoodList()
       } else {
-        this.$$message.error(meta.msg)
+        this.$message.error(meta.msg)
       }
     }
   }
